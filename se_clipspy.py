@@ -1,8 +1,8 @@
-import clipspy
+import clips
 
 def crear_entorno():
     # Creamos un entorno CLIPS
-    env = clipspy.Environment()
+    env = clips.Environment()
     # Lista donde se guardarán las reglas disparadas
     disparadas = []
 
