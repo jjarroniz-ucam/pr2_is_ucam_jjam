@@ -1,4 +1,2 @@
-streamlit
+streamlit==1.52.2
 clips
-crear_entorno
-inferir_recomendacion
