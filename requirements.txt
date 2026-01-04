@@ -1,3 +1,4 @@
 streamlit
+clips
 crear_entorno
 inferir_recomendacion
