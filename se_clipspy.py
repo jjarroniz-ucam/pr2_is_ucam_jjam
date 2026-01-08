@@ -72,15 +72,16 @@ def crear_entorno():
     """)
 
     # Combustible cercano al mínimo
-    (env.build("""
+    env.build("""
     (defrule combustible_alerta
-        (declare (salience 10))
+        (declare (salience 5))
         (lanzamiento (nivel_combustible ?n))
         (test (and (> ?n 95) (<= ?n 99)))
+        (not (conclusion (tipo critico)))
         =>
-        (regla_disparada "combustible_alerta" (str-cat "nivel_combustible = " ?n) "Nivel cercano al mínimo")
-        (assert (conclusion (tipo aviso) (detalle "Nivel de combustible cercano al mínimo"))))
-    """))
+        (regla_disparada "combustible_alerta" (str-cat "nivel_combustible = " ?n) "Nivel sub-óptimo. Se recomienda retraso de 2 horas para lanzamiento.")
+        (assert (conclusion (tipo retraso) (detalle "Retraso de 2 horas: repostaje de seguridad en curso"))))
+    """)
 
     # Fallo del motor principal
     env.build("""
