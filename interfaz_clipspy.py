@@ -97,7 +97,7 @@ if opcion == "Diagnóstico de lanzamiento":
             aerodinamica=aerodinamica_sim
         )
 
-        # MÓDULO DE EXPLICACIÓN (INTROSPECCIÓN)
+        # MÓDULO DE EXPLICACIÓN
         if disparadas:
             st.subheader("Trazabilidad: Razonamiento del Sistema")
             for item in disparadas:
