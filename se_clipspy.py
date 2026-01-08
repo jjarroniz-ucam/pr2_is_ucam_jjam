@@ -1,8 +1,21 @@
+"""
+Sistema Experto para el Diagnóstico de Viabilidad de Lanzamiento Espacial.
+Este módulo contiene la lógica de negocio, las plantillas y el motor de reglas
+basado en CLIPS para determinar el estado de un lanzamiento.
+"""
 import clips
 
 def crear_entorno():
+    """
+        Inicializa el entorno CLIPS, define las plantillas de hechos y las reglas de producción.
+
+        Returns:
+            tuple: (env, disparadas) Donde 'env' es el objeto Environment de CLIPS
+                   y 'disparadas' es la lista que almacenará el historial de reglas.
+        """
     # Creamos un entorno CLIPS
     env = clips.Environment()
+
     # Lista donde se guardarán las reglas disparadas
     disparadas = []
 
@@ -46,7 +59,7 @@ def crear_entorno():
     """)
 
     # FUNCIÓN AUXILIAR PARA ABORTAR
-    # Esta función decide si el lanzamiento debe abortarse
+    # Esta función decide si el lanzamiento debe abortarse basándose en criterios técnicos
     def abort_launch(c, m, p, n, co, e, s, pr, cl, se, ae):
         return (
                 c <= 95 or m == "no" or p == "fail" or n == "fail" or
@@ -270,6 +283,17 @@ def crear_entorno():
 
 
 def inferir_recomendacion(env, disparadas, nivel_combustible, motor_principal, presion_tanques, sistema_navegacion, sistema_comunicacion, sistema_electrico, software_control, prob_precipitaciones, estado_clima, sensores, aerodinamica):
+    """
+        Realiza la inferencia lógica basándose en los parámetros de entrada.
+
+        Args:
+            env (clips.Environment): El entorno CLIPS configurado.
+            disparadas (list): Lista para almacenar la trazabilidad de las reglas.
+            ... (resto de parámetros de telemetría) ...
+
+        Returns:
+            tuple: (texto_conclusion, lista_disparadas)
+        """
     # Reseteamos el entorno para cada inferencia
     env.reset()
 
@@ -307,4 +331,3 @@ def inferir_recomendacion(env, disparadas, nivel_combustible, motor_principal, p
 
     # Retornamos la concatenación de conclusiones y la lista de reglas disparadas
     return "\n".join(conclusiones) if conclusiones else "No se ha podido generar una conclusión final", disparadas
-

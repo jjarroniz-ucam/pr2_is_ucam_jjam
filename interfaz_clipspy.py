@@ -1,8 +1,13 @@
+"""
+Interfaz Gráfica del Sistema Experto de Lanzamiento Espacial.
+Desarrollada con Streamlit para permitir una interacción amigable con el motor CLIPS.
+"""
 import streamlit as st
 from se_clipspy import crear_entorno, inferir_recomendacion  # Importamos las funciones del sistema experto
 
 # Función para obtener el entorno CLIPS
 def get_env():
+    """Obtiene la instancia actual del motor de reglas configurado."""
     return crear_entorno()  # Retorna el entorno y la lista de reglas disparadas
 
 # Configuración de la página de Streamlit
@@ -13,7 +18,6 @@ st.set_page_config(
 
 # SIDEBAR
 st.sidebar.title("Menú")  # Título de la barra lateral
-
 # Radio para seleccionar la opción del menú
 opcion = st.sidebar.radio(
     "Selecciona una opción",
@@ -44,22 +48,23 @@ if opcion == "Diagnóstico de lanzamiento":
     st.write("Seleccione el estado de los sistemas antes del lanzamiento:")
 
     # CONTROLES VISUALES
-    # Inputs para el usuario que representan el estado de cada sistema
-    nivel_combustible_ui = st.slider("Nivel de combustible (%)", 0, 100, 100, 1)
-    motor_ui = st.radio("Motor principal", ["Funciona", "Anomalía"])
-    presion_ui = st.radio("Presión tanques", ["Correcta", "Baja"])
-    navegacion_ui = st.radio("Navegación", ["Operativa", "Fallo"])
-    comunicacion_ui = st.radio("Sistema de comunicación", ["Funcional", "Fallo"])
-    electrico_ui = st.selectbox("Sistema eléctrico", ["Funcional", "Fallo"])
-    software_ui = st.selectbox("Software de control", ["Funcional", "Fallo"])
-    precipitaciones = st.slider("Probabilidad de precipitaciones (%)", 0, 100, 0, 1)
-    clima_ui = st.radio("¿Clima actual?", ["Despejado", "Nublado"])
-    sensores_ui = st.radio("¿Estado de sensores?", ["Correcto", "Anomalía"])
-    aerodinamica_ui = st.radio("Estado de sistemas de aerodinámica", ["Correcto", "Fallo"])
+    # Organizamos los sliders y selectores para simular un panel de control
+    with st.expander("Parámetros Técnicos", expanded=True):
+        # Inputs para el usuario que representan el estado de cada sistema
+        nivel_combustible_ui = st.slider("Nivel de combustible (%)", 0, 100, 100, 1)
+        motor_ui = st.radio("Motor principal", ["Funciona", "Anomalía"])
+        presion_ui = st.radio("Presión tanques", ["Correcta", "Baja"])
+        navegacion_ui = st.radio("Navegación", ["Operativa", "Fallo"])
+        comunicacion_ui = st.radio("Sistema de comunicación", ["Funcional", "Fallo"])
+        electrico_ui = st.selectbox("Sistema eléctrico", ["Funcional", "Fallo"])
+        software_ui = st.selectbox("Software de control", ["Funcional", "Fallo"])
+        precipitaciones = st.slider("Probabilidad de precipitaciones (%)", 0, 100, 0, 1)
+        clima_ui = st.radio("¿Clima actual?", ["Despejado", "Nublado"])
+        sensores_ui = st.radio("¿Estado de sensores?", ["Correcto", "Anomalía"])
+        aerodinamica_ui = st.radio("Estado de sistemas de aerodinámica", ["Correcto", "Fallo"])
 
     # BOTÓN PARA EVALUAR
     if st.button("Evaluar lanzamiento"):
-
         # Mapeo de los valores de la UI a símbolos que CLIPS entiende
         nivel_combustible_sim = nivel_combustible_ui
         motor_principal_sim = "yes" if motor_ui == "Funciona" else "no"
@@ -73,7 +78,7 @@ if opcion == "Diagnóstico de lanzamiento":
         sensores_sim = "ok" if sensores_ui == "Correcto" else "fail"
         aerodinamica_sim = "ok" if aerodinamica_ui == "Correcto" else "fail"
 
-        # Crear entorno CLIPS
+        # Crear entorno CLIPS, se llama al sistema experto
         env, disparadas = get_env()  # Crea y devuelve el entorno y lista de reglas disparadas
 
         # Ejecutar motor de inferencia pasando todos los valores del lanzamiento
