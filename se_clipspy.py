@@ -293,6 +293,9 @@ def inferir_recomendacion(env, disparadas, nivel_combustible, motor_principal, p
     # Insertamos el hecho en CLIPS
     env.assert_string(hecho_lanzamiento)
 
+    # Limpiamos la lista de reglas disparadas para esta inferencia
+    disparadas.clear()
+
     # Ejecutamos todas las reglas
     env.run()
 
