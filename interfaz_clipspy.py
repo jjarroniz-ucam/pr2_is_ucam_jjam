@@ -108,5 +108,6 @@ if opcion == "Diagnóstico de lanzamiento":
         # RESULTADO FINAL DEL SISTEMA EXPERTO
         st.subheader("Recomendacion final del Sistema Experto")
 
-        # 4️⃣ Mostrar la recomendación en un área de texto
-        st.text_area("Resultado del sistema experto", recomendacion, height=200)
+        # Mostrar la recomendación en un área de texto
+        st.success("Análisis completado")
+        st.text_area("Veredicto del Director de Vuelo", recomendacion, height=150)
