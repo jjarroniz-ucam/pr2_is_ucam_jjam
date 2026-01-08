@@ -204,6 +204,34 @@ def crear_entorno():
                             (detalle "Fallo en aerodinámica: posible cancelación del lanzamiento"))))
     """)
 
+    # Riesgo de Tormenta Eléctrica (Clima + Sistema Eléctrico)
+    env.build("""
+            (defrule riesgo_tormenta_electrica
+                (declare (salience 15))
+                (lanzamiento (prob_precipitaciones ?p) (sistema_electrico ?e))
+                (test (and (>= ?p 40) (eq ?e fail)))
+                =>
+                (regla_disparada "riesgo_tormenta_electrica" 
+                                 (str-cat "precipitaciones = " ?p "% + fallo eléctrico") 
+                                 "Riesgo extremo de impacto por rayo y fallo total")
+                (assert (conclusion (tipo critico) 
+                                    (detalle "Peligro de tormenta eléctrica: integridad del vehículo en riesgo"))))
+            """)
+
+    # Degradación General del Sistema (Fallo múltiple no crítico individualmente)
+    # Si fallan al menos dos sistemas de soporte, aunque no sea aborto inmediato por cada uno
+    env.build("""
+            (defrule degradacion_sistemas_soporte
+                (declare (salience 12))
+                (lanzamiento (sistema_comunicacion fail) (software_control fail))
+                =>
+                (regla_disparada "degradacion_sistemas_soporte" 
+                                 "comunicación = fail, software = fail" 
+                                 "Degradación crítica de la capacidad de respuesta")
+                (assert (conclusion (tipo critico) 
+                                    (detalle "Degradación general: múltiples fallos en sistemas de soporte detectados"))))
+            """)
+
     # Revisión global de abort
     env.build("""
     (defrule revision_abort
