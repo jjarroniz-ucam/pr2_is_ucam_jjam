@@ -97,11 +97,13 @@ if opcion == "Diagnóstico de lanzamiento":
             aerodinamica=aerodinamica_sim
         )
 
-        # MOSTRAR REGLAS DISPARADAS
+        # MÓDULO DE EXPLICACIÓN (INTROSPECCIÓN)
         if disparadas:
-            st.subheader("Reglas disparadas y detalles")
-            for d in disparadas:
-                st.markdown(f"- **Regla:** {d['regla']}\n  - **Hecho:** {d['hecho']}\n  - **Detalle:** {d['detalle']}")
+            st.subheader("Trazabilidad: Razonamiento del Sistema")
+            for item in disparadas:
+                with st.expander(f"Regla: {item['regla']}"):
+                    st.write(f"**Causa detectada:** {item['hecho']}")
+                    st.write(f"**Justificación:** {item['detalle']}")
 
         # RESULTADO FINAL DEL SISTEMA EXPERTO
         st.subheader("Recomendacion final del Sistema Experto")
