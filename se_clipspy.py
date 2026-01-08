@@ -47,11 +47,13 @@ def crear_entorno():
 
     # FUNCIÓN AUXILIAR PARA ABORTAR
     # Esta función decide si el lanzamiento debe abortarse
-    def abort_launch(c, m, p, n, co, e, s, pr, cl, se):
+    def abort_launch(c, m, p, n, co, e, s, pr, cl, se, ae):
         return (
-            c <= 95 or m == "no" or p == "fail" or n == "fail" or
-            co == "fail" or e == "fail" or s == "fail" or
-            se == "fail" or pr >= 60 or (pr >= 30 and cl == "nublado")
+                c <= 95 or m == "no" or p == "fail" or n == "fail" or
+                co == "fail" or e == "fail" or s == "fail" or
+                se == "fail" or ae == "fail" or
+                pr >= 60 or (pr >= 30 and cl == "nublado") or
+                (co == "fail" and s == "fail")
         )
 
     # Registramos la función en CLIPS
@@ -201,7 +203,7 @@ def crear_entorno():
                          "aerodinamica = fail"
                          "Problema crítico en sistemas de aerodinámica")
         (assert (conclusion (tipo critico)
-                            (detalle "Fallo en aerodinámica: posible cancelación del lanzamiento"))))
+                            (detalle "Fallo en aerodinámica, posible cancelación del lanzamiento"))))
     """)
 
     # Riesgo de Tormenta Eléctrica (Clima + Sistema Eléctrico)
@@ -215,7 +217,7 @@ def crear_entorno():
                                  (str-cat "precipitaciones = " ?p "% + fallo eléctrico") 
                                  "Riesgo extremo de impacto por rayo y fallo total")
                 (assert (conclusion (tipo critico) 
-                                    (detalle "Peligro de tormenta eléctrica: integridad del vehículo en riesgo"))))
+                                    (detalle "Peligro de tormenta eléctrica, integridad del vehículo en riesgo"))))
             """)
 
     # Degradación General del Sistema (Fallo múltiple no crítico individualmente)
@@ -246,10 +248,11 @@ def crear_entorno():
             (software_control ?s)
             (prob_precipitaciones ?pr)
             (estado_clima ?cl)
-            (sensores ?se))
-        (test (abort_launch ?c ?m ?p ?n ?co ?e ?s ?pr ?cl ?se))
+            (sensores ?se)
+            (aerodinamica ?ae))
+        (test (abort_launch ?c ?m ?p ?n ?co ?e ?s ?pr ?cl ?se ?ae))
         =>
-        (regla_disparada "revision_abort" (str-cat "nivel_combustible = " ?c ", motor_principal = " ?m ", presion_tanques = " ?p) "Aborto recomendado por el sistema experto")
+        (regla_disparada "revision_abort" (str-cat "Estado crítico detectado") "Aborto recomendado por el sistema experto")
         (assert (conclusion (tipo critico) (detalle "Aborto recomendado por el sistema experto"))))
     """)
 
