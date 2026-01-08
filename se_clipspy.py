@@ -79,8 +79,8 @@ def crear_entorno():
         (test (and (> ?n 95) (<= ?n 99)))
         (not (conclusion (tipo critico)))
         =>
-        (regla_disparada "combustible_alerta" (str-cat "nivel_combustible = " ?n) "Nivel sub-óptimo. Se recomienda retraso de 2 horas para lanzamiento.")
-        (assert (conclusion (tipo retraso) (detalle "Retraso de 2 horas: repostaje de seguridad en curso"))))
+        (regla_disparada "combustible_alerta" (str-cat "nivel_combustible = " ?n) "Se recomienda retraso de 2 horas para lanzamiento.")
+        (assert (conclusion (tipo retraso) (detalle "Retraso de 2 horas, repostaje de seguridad en curso..."))))
     """)
 
     # Fallo del motor principal
@@ -232,7 +232,7 @@ def crear_entorno():
                                  "comunicación = fail, software = fail" 
                                  "Degradación crítica de la capacidad de respuesta")
                 (assert (conclusion (tipo critico) 
-                                    (detalle "Degradación general: múltiples fallos en sistemas de soporte detectados"))))
+                                    (detalle "Degradación general, múltiples fallos en sistemas de soporte detectados"))))
             """)
 
     # Revisión global de abort
